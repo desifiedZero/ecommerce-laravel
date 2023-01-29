@@ -1,5 +1,9 @@
 body {
   background-color: rgb(239, 239, 239);
+  background-image: url('../../../public/login-bg.jpg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 #root {
@@ -7,36 +11,35 @@ body {
 }
 
 .container-suspend {
-    position: relative;
+    margin: auto;
+
     height: 100%;
-  
+    max-width: 40%;
+    
     display: flex;
     justify-content: center;
-    align-items: center;
+    flex-direction: column;
+}
+
+.container-suspend h1 {
+    color: white;
 }
 
 .form-container {
-    max-width: 30%;
-
     background-color: white;
     border-radius: 1.5rem;
     border: 1px rgb(225, 225, 225) solid;
-    padding: 2.5rem 1.5rem;
+    padding: 1.5rem;
 }
 
-.form-container input {
-    margin-bottom: 1rem;
-}
-
-@media only screen and (max-width: 800px) {
-    .form-container {
+@media only screen and (max-width: 900px) {
+    .container-suspend {
         max-width: 60%;
     }
 }
 
 @media only screen and (max-width: 600px) {
-    .form-container {
+    .container-suspend {
         max-width: 90%;
     }
 }
-

@@ -2,6 +2,7 @@ import React from "react";
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { Button, TextField } from "@mui/material";
+import { Link, useOutletContext } from "react-router-dom";
 
 const validationSchema = yup.object({
     email: yup
@@ -14,11 +15,14 @@ const validationSchema = yup.object({
         .required('Password is required'),
 });
 
-export default function Login() {
+export default function Login(props) {
+    const { setName } = useOutletContext();
+    setName("Login");
+
     const formik = useFormik({
         initialValues: {
-            email: 'foobar@example.com',
-            password: 'foobar',
+            email: '',
+            password: '',
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {
@@ -26,7 +30,7 @@ export default function Login() {
         },
     });
 
-    return <div>
+    return <>
         <form onSubmit={formik.handleSubmit} onReset={formik.handleReset}>
             <TextField
                 fullWidth
@@ -37,6 +41,9 @@ export default function Login() {
                 onChange={formik.handleChange}
                 error={formik.touched.email && Boolean(formik.errors.email)}
                 helperText={formik.touched.email && formik.errors.email}
+                sx={{mb: 1.5}}
+                autoComplete='off'
+                autoFocus
             />
             <TextField
                 fullWidth
@@ -48,10 +55,15 @@ export default function Login() {
                 onChange={formik.handleChange}
                 error={formik.touched.password && Boolean(formik.errors.password)}
                 helperText={formik.touched.password && formik.errors.password}
+                sx={{mb: 1.5}}
+                autoComplete='off'
             />
             <Button color="primary" variant="contained" fullWidth type="submit">
-                Submit
+                <b>Login</b>
             </Button>
+            <span >
+                <Link to={"../signup"}>Already have an account?</Link>
+            </span>
         </form>
-    </div>
+    </>
 }
