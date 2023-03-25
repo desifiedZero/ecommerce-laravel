@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import './index.css';
 import { Outlet } from "react-router-dom";
+import Login from "./login/login";
 
 export default function Auth(props) {
-    const [name, setName] = useState("Authorize");
+    const [name, setName] = useState("No page here");
 
     return <div className="container-suspend">
         <div>
