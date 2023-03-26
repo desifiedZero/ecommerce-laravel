@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { Button, TextField } from "@mui/material";
-import { Link, useOutletContext } from "react-router-dom";
+import { Link, useNavigate, useOutletContext } from "react-router-dom";
+import { NotificationManager } from "react-notifications";
+import ApiRoutes from "apiRoutes";
+import '../auth.css';
 
 const validationSchema = yup.object({
     email: yup
@@ -17,7 +20,11 @@ const validationSchema = yup.object({
 
 export default function Login(props) {
     const { setName } = useOutletContext();
-    setName("Login");
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        setName("Login");
+    }, [])
 
     const formik = useFormik({
         initialValues: {
@@ -26,8 +33,31 @@ export default function Login(props) {
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {
-            alert(JSON.stringify(values, null, 2));
-        },
+            fetch(process.env.REACT_APP_BASE_URL.concat(ApiRoutes.login), {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                    // 'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: JSON.stringify(values)
+            })
+                .then(data => {
+                    if (!data.ok) throw new Error();
+                    return data;
+                })
+                .then(data => data.json())
+                .then(data => {
+                    localStorage.setItem('auth-token', data.data.token);
+                    localStorage.setItem('username', data.data.name);
+                    
+                    NotificationManager.success(data.message);
+
+                    navigate('/');
+                })
+                .catch(error => {
+                    NotificationManager.error('Login failed! Please try again with correct credentials.');
+                })
+        }
     });
 
     return <>
@@ -61,7 +91,7 @@ export default function Login(props) {
             <Button color="primary" variant="contained" fullWidth type="submit">
                 <b>Login</b>
             </Button>
-            <span >
+            <span className="appendage">
                 <Link to={"../signup"}>Already have an account?</Link>
             </span>
         </form>

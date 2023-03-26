@@ -1,8 +1,11 @@
 import { Button, TextField } from "@mui/material";
+import ApiRoutes from "apiRoutes";
 import { useFormik } from "formik";
-import React from "react";
-import { Link, useOutletContext } from "react-router-dom";
+import React, { useEffect } from "react";
+import { NotificationManager } from "react-notifications";
+import { Link, useNavigate, useOutletContext } from "react-router-dom";
 import * as yup from 'yup';
+import '../auth.css';
 
 const validationSchema = yup.object({
     name: yup
@@ -16,7 +19,7 @@ const validationSchema = yup.object({
         .string()
         .min(8, 'Password should be of minimum 8 characters length')
         .required('Password is required'),
-    verifyPassword: yup
+    c_password: yup
         .string()
         .required('Please retype the password')
         .oneOf([yup.ref('password')], "Passwords must match")
@@ -24,19 +27,45 @@ const validationSchema = yup.object({
 
 export default function Signup(props) {
     const { setName } = useOutletContext();
-    setName("Signup");
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        setName("Signup");
+    }, [])
 
     const formik = useFormik({
         initialValues: {
             name: '',
             email: '',
             password: '',
-            verifyPassword: '',
+            c_password: '',
         },
         validationSchema: validationSchema,
-        onSubmit: (values) => {
-            alert(JSON.stringify(values, null, 2));
-        },
+            onSubmit: (values) => {
+                fetch(process.env.REACT_APP_BASE_URL.concat(ApiRoutes.signup), {
+                    method: 'POST',
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(values)
+                })
+                    .then(data => {
+                        if (!data.ok) throw new Error();
+                        return data;
+                    })
+                    .then(data => data.json())
+                    .then(data => {
+                        localStorage.setItem('auth-token', data.data.token);
+                        localStorage.setItem('username', data.data.name);
+
+                        NotificationManager.success(data.message);
+    
+                        navigate('/');
+                    })
+                    .catch(error => {
+                        NotificationManager.error('Registration failed! Please try again with correct details.');
+                    })
+            },
     });
 
     return <>
@@ -82,21 +111,21 @@ export default function Signup(props) {
             />
             <TextField
                 fullWidth
-                id="verifyPassword"
-                name="verifyPassword"
+                id="c_password"
+                name="c_password"
                 label="Verify Password"
                 type="password"
-                value={formik.values.verifyPassword}
+                value={formik.values.c_password}
                 onChange={formik.handleChange}
-                error={formik.touched.verifyPassword && Boolean(formik.errors.verifyPassword)}
-                helperText={formik.touched.verifyPassword && formik.errors.verifyPassword}
+                error={formik.touched.c_password && Boolean(formik.errors.c_password)}
+                helperText={formik.touched.c_password && formik.errors.c_password}
                 sx={{ mb: 1.5 }}
                 autoComplete='off'
             />
             <Button color="primary" variant="contained" fullWidth type="submit">
                 <b>Signup</b>
             </Button>
-            <span >
+            <span className="appendage">
                 <Link to={"../login"}>Already have an account?</Link>
             </span>
         </form>

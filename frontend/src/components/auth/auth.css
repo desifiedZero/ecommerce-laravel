@@ -22,7 +22,27 @@ body {
 }
 
 .container-suspend h1 {
-    color: white;
+    color: #333;
+}
+
+span.appendage {
+    display: block;
+    padding: 1rem 0 0 0;
+    text-align: center;
+}
+
+span.appendage > a {
+    text-decoration: none;
+}
+
+span.appendage > a, 
+span.appendage > a:focus, 
+span.appendage > a:active {
+    color:rgb(14, 106, 167)
+}
+
+.appendage > a:hover {
+    color:rgb(48, 148, 214)
 }
 
 .form-container {
