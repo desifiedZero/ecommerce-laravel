@@ -56,7 +56,9 @@ export default function Signup(props) {
                     .then(data => data.json())
                     .then(data => {
                         localStorage.setItem('auth-token', data.data.token);
+                        localStorage.setItem('user-id', data.data.id);
                         localStorage.setItem('username', data.data.name);
+                        localStorage.setItem('role', data.data.role);
 
                         NotificationManager.success(data.message);
     

@@ -32,7 +32,7 @@ export default function User() {
             })
     }, [])
 
-    return <Container maxWidth='fluid'>
+    return <Container>
         <h1>User Details</h1>
 
         <TextField

@@ -48,15 +48,21 @@ export default function Login(props) {
                 .then(data => data.json())
                 .then(data => {
                     localStorage.setItem('auth-token', data.data.token);
+                    localStorage.setItem('user-id', data.data.id);
                     localStorage.setItem('username', data.data.name);
+                    localStorage.setItem('role', data.data.role);
                     
                     NotificationManager.success(data.message);
 
-                    navigate('/');
+                    if (String(data.data.role).toLowerCase() == 'admin') {
+                        navigate('/admin');
+                    } else {
+                        navigate('/');
+                    }
                 })
                 .catch(error => {
                     NotificationManager.error('Login failed! Please try again with correct credentials.');
-                })
+                });
         }
     });
 

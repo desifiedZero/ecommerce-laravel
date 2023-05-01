@@ -11,10 +11,18 @@ import Homepage from 'components/homepage/homepage';
 
 import 'react-notifications/lib/notifications.css';
 import './index.css';
-import BaseLayout from 'components/common/baseLayout/baseLayout';
+import BaseLayout from 'components/common/baseLayout';
 import { ProSidebarProvider } from 'react-pro-sidebar';
 import Product from 'components/product/product';
 import User from 'components/user/user';
+import AdminLayout from 'components/common/adminLayout';
+import AdminDashboard from 'components/admin/adminDashboard';
+import AdminUser from 'components/admin/users';
+import AdminAdmin from 'components/admin/admins';
+import AdminBanners from 'components/admin/banners';
+import AdminProducts from 'components/admin/products';
+import AdminOrders from 'components/admin/orders';
+import Checkout from 'components/checkout/checkout';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -46,7 +54,42 @@ const router = createBrowserRouter([
             {
                 path: "user",
                 element: <User />,
+            },
+            {
+                path: 'checkout',
+                element: <Checkout />
             }
+        ]
+    },
+    {
+        path: 'admin',   
+        element: <AdminLayout />,
+        children: [
+            {
+                path: "",
+                element: <AdminDashboard />,
+            },
+            {
+                path: 'users',
+                element: <AdminUser />
+            },
+            {
+                path: 'admins',
+                element: <AdminAdmin />
+            },
+            {
+                path: 'banners',
+                element: <AdminBanners />
+            },
+            {
+                path: 'products',
+                element: <AdminProducts />
+            },
+            {
+                path: 'orders',
+                element: <AdminOrders />
+            },
+
         ]
     },
     {

@@ -1,12 +1,12 @@
 import { Button } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Sidebar, Menu, MenuItem, SubMenu, useProSidebar } from "react-pro-sidebar";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 import MenuIcon from '@mui/icons-material/Menu';
 import CategoryIcon from '@mui/icons-material/Category';
-import { AppRegistration, Login, Person, Logout } from "@mui/icons-material";
+import { Person, Logout, ShoppingBag } from "@mui/icons-material";
 import { NotificationManager } from "react-notifications";
 
 const styles = {
@@ -26,22 +26,30 @@ const flex = {
     placeContent: 'space-between'
 }
 
-export default function BaseLayout(props) {
+export default function AdminLayout(props) {
     const { collapseSidebar, collapsed } = useProSidebar();
-
+    const navigate = useNavigate();
+    
     const [user, setUser] = useState(null);
+
     const fetchUserInfo = () => {
         if (localStorage.getItem('auth-token') && localStorage.getItem('username'))
             setUser({
                 token: localStorage.getItem('auth-token'),
-                name: localStorage.getItem('username')
+                name: localStorage.getItem('username'),
+                role: localStorage.getItem('role')
             });
-        else 
+        else  {
             setUser(null);
+            navigate('/auth/login');
+        }
     }
 
     useEffect(() => {
         fetchUserInfo();
+
+        if (localStorage.getItem('role').toLowerCase() != 'admin')
+            navigate('/auth/login');
     }, [])
 
     const authInfo = () => {
@@ -52,21 +60,19 @@ export default function BaseLayout(props) {
                 </Link>
                 <MenuItem icon={<Logout />} onClick={() => {
                     localStorage.clear();
+                    localStorage.setItem('cart', '{}');
+
                     setUser(null);
                     NotificationManager.info("You logged out successfully");
                 }}> Logout </MenuItem>
             </Menu>
-        } else {
-            return <Menu>
-                <Link to="/auth/login">
-                    <MenuItem icon={<Login />}> Login </MenuItem>
-                </Link>
-                <Link to="/auth/signup">
-                    <MenuItem icon={<AppRegistration />}> Register </MenuItem>
-                </Link>
-            </Menu>
         }
+
+        navigate('/auth/login');
     }
+
+    const featureList = ['Users', 'Admins', 'Banners', 'Orders', 'Products'];
+    const menuItems = featureList.map(x => <MenuItem onClick={() => navigate("/admin/" + x.toLowerCase())}> {x} </MenuItem>)
 
     return <div style={ styles }>
             <div style={ stylesSidebar }>
@@ -74,15 +80,16 @@ export default function BaseLayout(props) {
                     <div style={flex}>
                         <div>
                             <Menu>
-                                <Link to="/">
+                                <Link to="/admin">
                                     <MenuItem icon={<RocketLaunchIcon />}>
-                                        <b>E-Commerse Solution</b>
+                                        <b>Admin Panel</b>
                                     </MenuItem>
                                 </Link>
                             </Menu>
                             <hr />
                             <Menu>
-                                <SubMenu label="Categories" icon={<CategoryIcon />}>
+                                <SubMenu label="Actions" icon={<CategoryIcon />}>
+                                {menuItems}
                                 </SubMenu>
                             </Menu>
                         </div>
