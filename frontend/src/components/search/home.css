@@ -1,0 +1,35 @@
+.product-item {
+    padding: 15px;
+    width: 100%;
+}
+
+.product-item p {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.product-item * {
+    text-decoration: none;
+    color: rgb(5, 89, 138);
+}
+
+.product-item:hover * {
+    text-decoration: none;
+    color: rgb(0, 120, 189);
+}
+
+.product-item .image-container {
+    width: 100%;
+    height: 150px;
+
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.product-item .image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}

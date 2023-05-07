@@ -3,6 +3,7 @@ const ApiRoutes = {
     signup: '/auth/register',
 
     allProducts: '/product',
+    searchProducts: '/search',
     getCartItems: '/get-cart-items',
 
     banners: '/display-banners',

@@ -219,8 +219,8 @@ export default function BaseLayout(props) {
                             </Menu>
                             <hr />
                             <Menu>
-                                <SubMenu label="Categories" icon={<CategoryIcon />}>
-                                </SubMenu>
+                                {/* <SubMenu label="Categories" icon={<CategoryIcon />}>
+                                </SubMenu> */}
                             </Menu>
                         </div>
                         <div>

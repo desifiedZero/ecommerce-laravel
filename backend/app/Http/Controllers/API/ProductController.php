@@ -127,4 +127,15 @@ class ProductController extends BaseController
 
         return $this->sendResponse($storedItems, 'Cart items fetch successfully.');
     }
+
+    public function search($query)
+    {
+        $product = Product::query()->where('name', 'LIKE', "%$query%")->get();
+  
+        if (is_null($product)) {
+            return $this->sendError('Product not found.');
+        }
+   
+        return $this->sendResponse(ProductResource::collection($product->all()), 'Product retrieved successfully.');
+    }
 }

@@ -29,6 +29,7 @@ Route::resource('category', CategoryController::class)->middleware(['auth:sanctu
 
 Route::controller(ProductController::class)->group(function() {
     Route::get('product', 'index');
+    Route::get('search/{query}', 'search');
     Route::get('product/{product}', 'show');
     Route::post('get-cart-items', 'getCartItems');
 });

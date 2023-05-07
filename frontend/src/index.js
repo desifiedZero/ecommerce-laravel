@@ -23,6 +23,7 @@ import AdminBanners from 'components/admin/banners';
 import AdminProducts from 'components/admin/products';
 import AdminOrders from 'components/admin/orders';
 import Checkout from 'components/checkout/checkout';
+import SearchPage from 'components/search/search';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -50,10 +51,13 @@ const router = createBrowserRouter([
                 path: "product/:id",
                 element: <Product />,
             },
-            ,
             {
                 path: "user",
                 element: <User />,
+            },
+            {
+                path: "search/:query",
+                element: <SearchPage />,
             },
             {
                 path: 'checkout',

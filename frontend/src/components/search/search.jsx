@@ -1,24 +1,28 @@
-import { Grid, IconButton, InputBase, Paper } from "@mui/material";
+import { Grid } from "@mui/material";
 import { Container } from "@mui/system";
 import ApiRoutes from "apiRoutes";
 import React, { useEffect, useState } from "react";
 import { NotificationManager } from "react-notifications";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 import './home.css'
-import MainCarousel from "components/common/mainCarousel";
-import { Search } from "@mui/icons-material";
 import SearchBar from "components/common/searchbar";
 
-export default function Homepage(props) {
+export default function SearchPage(props) {
     const [fetchedProducts, setFetchedProducts] = useState(false);
-    const [fetchedbanners, setFetchedBanners] = useState(false);
     const [products, setProducts] = useState(<></>);
-    const [banners, setBanners] = useState([]);
+    const [search, setSearch] = useState("");
+
+    const { query } = useParams();
 
     useEffect(() => {
+        if (query != search) {
+            setSearch(query);
+            setFetchedProducts(false);
+        }
+
         if (!fetchedProducts) {
-            fetch(process.env.REACT_APP_BASE_URL.concat(ApiRoutes.allProducts))
+            fetch(process.env.REACT_APP_BASE_URL.concat(ApiRoutes.searchProducts + "/" + query))
             .then(x => {
                 if (x.ok) return x.json();
                 throw new Error();
@@ -42,36 +46,16 @@ export default function Homepage(props) {
                 NotificationManager.error("There was a problem loading the data. Please try again in a while.")
             })
         }
-
-        if (!fetchedbanners) {
-            fetch(process.env.REACT_APP_BASE_URL.concat(ApiRoutes.banners))
-            .then(x => {
-                if (x.ok) return x.json();
-                throw new Error();
-            })
-            .then(data => {
-                setFetchedBanners(true);
-                setBanners(data.data);
-            })
-            .catch(err => {
-            })
-        }
     });
 
     return <div style={{width: '100%', display: 'flex', flexDirection: 'column'}}>
                 <Container>
                     <SearchBar />
-                    <div style={{
-                        overflow: 'hidden',
-                        borderRadius: '10px'
-                    }}>
-                        <MainCarousel banners={banners}/>
-                    </div>
 
-                    <h1>Our Products</h1>
+                    <h1>Search</h1>
                     <Grid container spacing={2}>
                         {products}
                     </Grid>
                 </Container>
-            </div>
+            </div>;
 }
