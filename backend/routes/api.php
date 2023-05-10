@@ -32,6 +32,7 @@ Route::controller(ProductController::class)->group(function() {
     Route::get('search/{query}', 'search');
     Route::get('product/{product}', 'show');
     Route::post('get-cart-items', 'getCartItems');
+    Route::post('product-review', 'review')->middleware('auth:sanctum');
 });
 
 Route::controller(RegisterController::class)->group(function() {

@@ -7,6 +7,10 @@ use App\Http\Controllers\API\BaseController as BaseController;
 use App\Models\Product;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\ProductResource;
+use App\Models\Order;
+use App\Models\Review;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends BaseController
 {
@@ -67,6 +71,20 @@ class ProductController extends BaseController
   
         if (is_null($product)) {
             return $this->sendError('Product not found.');
+        }
+
+        $user = Auth::guard('sanctum')->user();
+        $findAny = Review::where('product_id', $id)->where('user_id', $user->id)->first();
+
+        if ($user && !$findAny) {
+            $orders = Order::whereRelation('products', 'products.id', $id)->get()->toArray();
+            $product->allowReviews = count($orders) > 0;
+        }
+
+        $product->reviews;
+        
+        foreach ($product->reviews as $reviews) {
+            $reviews->username = User::find($reviews->user_id)->name;
         }
    
         return $this->sendResponse(new ProductResource($product), 'Product retrieved successfully.');
@@ -137,5 +155,28 @@ class ProductController extends BaseController
         }
    
         return $this->sendResponse(ProductResource::collection($product->all()), 'Product retrieved successfully.');
+    }
+
+    public function review(Request $request) {
+        $input = $request->all();
+
+        $validator = Validator::make($input, [
+            'product_id' => 'required',
+            'rating' => 'required',
+            'text' => ''
+        ]);
+
+        if($validator->fails()){
+            return $this->sendError('Validation Error.', $validator->errors());       
+        }
+
+        $review = Review::create([
+            'text' => $input['text'] == null || $input['text'] == '' ? "-" : $input['text'],
+            'rating' => $input['rating'],
+            'product_id' => $input['product_id'],
+            'user_id' => Auth::user()->id,
+        ]);
+
+        return $this->sendResponse(null, 'Review added.');
     }
 }

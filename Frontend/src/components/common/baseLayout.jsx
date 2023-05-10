@@ -6,7 +6,7 @@ import { Link, Outlet, useNavigate } from "react-router-dom";
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 import MenuIcon from '@mui/icons-material/Menu';
 import CategoryIcon from '@mui/icons-material/Category';
-import { AppRegistration, Login, Person, Logout, ShoppingBag } from "@mui/icons-material";
+import { AppRegistration, Login, Person, Logout, ShoppingBag, WhatsApp } from "@mui/icons-material";
 import { NotificationManager } from "react-notifications";
 import ApiRoutes from "apiRoutes";
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -265,6 +265,25 @@ export default function BaseLayout(props) {
                     </Button>
                 </DialogActions>
             </Dialog>
+            <IconButton 
+            color="success" 
+            aria-label="" 
+            sx={{ position: 'fixed', bottom: '1rem', right: '1rem', ':hover': {
+                background: 'white',
+                outline: '3px #128C7E solid',
+                outlineOffset: '-3px',
+                '&> svg': {
+                    color: '#128C7E'
+                },
+                transition: 'all .15s'
+            }, background: '#128C7E'}} 
+            size="large"
+            onClick={() => {
+                window.open("https://api.whatsapp.com/send?phone=+1631-555-1111&text=I%20need%20help%20placing%20my%20order", "_blank")
+            }}>
+                <WhatsApp sx={{zoom: '1.2', ':hover': {
+            }, color: 'white'}}/>
+            </IconButton>
         </div>;
     
 }
